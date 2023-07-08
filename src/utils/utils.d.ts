@@ -5,5 +5,6 @@ declare namespace Utils {
     _element: HTMLCanvasElement
     _context: CanvasRenderingContext2D
     renderRect(): void
+    draw(): void
   }
 }
