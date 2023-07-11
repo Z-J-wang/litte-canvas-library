@@ -15,15 +15,17 @@ function reRender() {
 onMounted(() => {
   canvasInstance = new Canvas(canvas.value)
   canvasInstance.draw()
-  ballInstance = new Ball(canvasBall.value)
-  ballInstance.draw()
+  ballInstance = new Ball(canvasBall.value, 1000, 500)
+  ballInstance.drawBall('uniform motion')
 })
 </script>
 
 <template>
-  <canvas ref="canvas" width="1000" height="500"></canvas>
-  <canvas ref="canvasBall" width="1000" height="500"></canvas>
-  <button class="float-right cursor-pointer" type="button" @click="reRender">重新渲染</button>
+  <div class="relative">
+    <canvas ref="canvas" width="1000" height="500"></canvas>
+    <canvas class="absolute-top-left" ref="canvasBall" width="1000" height="500"></canvas>
+    <button class="float-right cursor-pointer" type="button" @click="reRender">重新渲染</button>
+  </div>
 </template>
 
 <style lang="less" scoped>

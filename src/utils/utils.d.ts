@@ -7,4 +7,6 @@ declare namespace Utils {
     renderRect(): void
     draw(): void
   }
+
+  export type SportType = 'uniform motion' | 'decelerated motion' // uniform motion=>匀速运动；decelerated motion=>减速运动
 }

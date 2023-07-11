@@ -4,6 +4,23 @@
 
 @default-fontSize: 16px;
 
+// position相关
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.absolute-top-left {
+  &:extend(.absolute);
+
+  top: 0;
+  left: 0;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
