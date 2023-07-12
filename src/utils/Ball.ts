@@ -1,6 +1,11 @@
 import Canvas from './canvas'
 
-export default class Ball extends Canvas {
+export enum SportTypeEnum {
+  'uniform motion', // 匀速运动
+  'decelerated motion' // 减速运动
+}
+
+export class Ball extends Canvas {
   private _width: number
   private _height: number
   private _xv: number = 0.3 // 小球水平方向的速度
@@ -9,6 +14,8 @@ export default class Ball extends Canvas {
   private _pervTimestamp: number = 0 // requestAnimationFrame前一次的渲染的时间戳,初始值为0
   private _prevX: number // 前一次渲染的X坐标值
   private _prevY: number // 前一次渲染的Y坐标值，默认-250（中间）
+
+  private _id!: number
 
   constructor(element: HTMLCanvasElement, width: number, height: number) {
     super(element)
@@ -19,11 +26,22 @@ export default class Ball extends Canvas {
     this._prevY = 0
   }
 
-  drawBall(sportType: Utils.SportType): void {
-    if (sportType === 'uniform motion') {
-      window.requestAnimationFrame((timestamp) => this.uniformMotion(timestamp))
-    } else {
-      window.requestAnimationFrame((timestamp) => this.deceleratedMotion(timestamp))
+  init(): void {
+    this._xv = 0.3
+    this._yv = 0.25
+    this._a = -0.04
+    this._prevX = this._width / 2
+    this._prevY = 0
+  }
+
+  drawBall(sportType: SportTypeEnum): void {
+    window.cancelAnimationFrame(this._id)
+    this.init()
+    if (sportType === SportTypeEnum['uniform motion']) {
+      this._id = window.requestAnimationFrame((timestamp) => this.uniformMotion(timestamp))
+    }
+    if (sportType === SportTypeEnum['decelerated motion']) {
+      this._id = window.requestAnimationFrame((timestamp) => this.deceleratedMotion(timestamp))
     }
   }
 
@@ -57,7 +75,7 @@ export default class Ball extends Canvas {
     this._prevX = x
     this._pervTimestamp = timestamp
     this.renderBall(x, y)
-    window.requestAnimationFrame((timestamp) => this.deceleratedMotion(timestamp))
+    this._id = window.requestAnimationFrame((timestamp) => this.deceleratedMotion(timestamp))
   }
 
   // 匀速运动
@@ -88,7 +106,7 @@ export default class Ball extends Canvas {
     this._prevX = x
     this._pervTimestamp = timestamp
     this.renderBall(x, y)
-    window.requestAnimationFrame((timestamp) => this.uniformMotion(timestamp))
+    this._id = window.requestAnimationFrame((timestamp) => this.uniformMotion(timestamp))
   }
 
   renderBall(x: number, y: number): void {

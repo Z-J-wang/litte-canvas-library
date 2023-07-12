@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Canvas from '@/utils/canvas'
-import Ball from '@/utils/Ball'
+import { Ball, SportTypeEnum } from '@/utils/Ball'
+import '@/utils/utils.d.ts'
 
 const canvas = ref()
 const canvasBall = ref()
-let canvasInstance: Utils.Canvas
+let canvasInstance: Canvas
 let ballInstance: Ball
 
 function reRender() {
   canvasInstance.draw()
+  ballInstance.drawBall(SportTypeEnum['decelerated motion'])
 }
 
 onMounted(() => {
   canvasInstance = new Canvas(canvas.value)
   canvasInstance.draw()
   ballInstance = new Ball(canvasBall.value, 1000, 500)
-  ballInstance.drawBall('uniform motion')
+  ballInstance.drawBall(SportTypeEnum['decelerated motion'])
 })
 </script>
 
