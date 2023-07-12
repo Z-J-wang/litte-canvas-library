@@ -26,7 +26,7 @@ onMounted(() => {
   <div class="relative">
     <canvas ref="canvas" width="1000" height="500"></canvas>
     <canvas class="absolute-top-left" ref="canvasBall" width="1000" height="500"></canvas>
-    <button class="float-right cursor-pointer" type="button" @click="reRender">重新渲染</button>
+    <el-button class="float-right cursor-pointer" @click="reRender">重新渲染</el-button>
   </div>
 </template>
 
