@@ -2,7 +2,7 @@
  * stylelint 依赖如下：
  * "stylelint": "^13.3.3"
  * "stylelint-config-standard": "^20.0.0"
- * "stylelint-order": "^6.0.3"
+ * "stylelint-order": "^4.1.0"
  *
  * vue2 中 stylelint 需要v13及以下版本
  * stylelint-config-standard v20.0.0为stylelint v13.3.3 配套版本
