@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import Canvas from '@/utils/canvas'
+import Canvas from '@/utils/Canvas'
 import Clock from '@/utils/Clock'
 import { Ball, SportTypeEnum } from '@/utils/Ball'
 import '@/utils/utils.d.ts'
@@ -44,3 +44,4 @@ canvas {
   border: 1px solid #222222;
 }
 </style>
+@/utils/Canvas
