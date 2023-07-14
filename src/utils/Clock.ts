@@ -6,6 +6,10 @@ export default class Clock extends Canvas {
 
   private _id!: number
 
+  private _second!: number
+  private _minute!: number
+  private _hour!: number
+
   private _r: number = 100
 
   constructor(element: HTMLCanvasElement, width: number, height: number) {
@@ -16,9 +20,16 @@ export default class Clock extends Canvas {
   }
 
   draw() {
-    const ctx = super.context
-    ctx.clearRect(0, 0, this._width, this._height)
-    this.renderWatchFace()
+    this._id = window.requestAnimationFrame(() => {
+      const ctx = super.context
+      window.cancelAnimationFrame(this._id)
+      ctx.clearRect(0, 0, this._width, this._height)
+      this.second()
+      this.minute()
+      this.hour()
+      this.renderWatchFace()
+      this._id = window.requestAnimationFrame(() => this.draw())
+    })
     // const date = new Date()
     // const h = date.getHours()
     // const m = date.getMinutes()
@@ -33,9 +44,12 @@ export default class Clock extends Canvas {
     ctx.save()
     ctx.translate(this._width / 2, this._height / 2)
     ctx.rotate(-Math.PI / 2)
+    ctx.save()
     ctx.beginPath()
     ctx.arc(0, 0, 4, 0, Math.PI * 2, false)
+    ctx.fillStyle = 'red'
     ctx.fill()
+    ctx.restore()
     ctx.beginPath()
     ctx.arc(0, 0, this._r, 0, Math.PI * 2, false)
     ctx.stroke()
@@ -58,6 +72,53 @@ export default class Clock extends Canvas {
       ctx.rotate(Math.PI / 30)
       ctx.stroke()
     }
+    ctx.restore()
+  }
+
+  second() {
+    const ctx = super.context
+    this._second = new Date().getSeconds()
+    ctx.save()
+    ctx.translate(this._width / 2, this._height / 2)
+    ctx.rotate((Math.PI * this._second) / 30 - Math.PI / 2)
+    ctx.beginPath()
+    ctx.moveTo(-10, 0)
+    ctx.lineTo(this._r - 12, 0)
+    ctx.closePath()
+    ctx.stroke()
+    ctx.restore()
+  }
+
+  minute() {
+    const ctx = super.context
+    this._minute = new Date().getMinutes()
+    ctx.save()
+    ctx.translate(this._width / 2, this._height / 2)
+    ctx.rotate((Math.PI * this._minute) / 30 + (Math.PI * this._second) / 1800 - Math.PI / 2)
+    ctx.beginPath()
+    ctx.moveTo(-10, 0)
+    ctx.lineWidth = 3
+    ctx.lineTo(this._r - 15, 0)
+    ctx.closePath()
+    ctx.stroke()
+    ctx.restore()
+  }
+
+  hour() {
+    const ctx = super.context
+    const hour = new Date().getHours()
+    this._hour = hour >= 12 ? hour - 12 : hour
+    ctx.save()
+    ctx.translate(this._width / 2, this._height / 2)
+    ctx.rotate(
+      (Math.PI * this._hour) / 6 + (Math.PI * this._minute) / 360 + (Math.PI * this._second) / 21600 - Math.PI / 2
+    )
+    ctx.beginPath()
+    ctx.moveTo(-10, 0)
+    ctx.lineWidth = 5
+    ctx.lineTo(this._r - 30, 0)
+    ctx.closePath()
+    ctx.stroke()
     ctx.restore()
   }
 }
