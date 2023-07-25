@@ -21,6 +21,11 @@ const router = createRouter({
       path: '/canvas',
       name: 'Canvas',
       component: () => import('../views/CanvasView.vue')
+    },
+    {
+      path: '/gluttonous_snake',
+      name: 'GluttonousSnake',
+      component: () => import('../views/GluttonousSnakeView.vue')
     }
   ]
 })
