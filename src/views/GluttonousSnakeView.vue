@@ -1,13 +1,24 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import Snake from '@/utils/Snake'
+import { ref, onMounted, watch } from 'vue'
+import { Snake, keyCodeEnum } from '@/utils/Snake'
+import type { Direction } from '@/utils/Snake'
+import { useKeyup } from '@/useVue/keyup'
 
 const snake = ref()
-
+const { keyCode } = useKeyup()
 let instance: Snake
 
+const reRender = () => {
+  instance.render()
+}
+
+watch(keyCode, (value) => {
+  instance.walk(keyCodeEnum[value] as Direction)
+})
+
 onMounted(() => {
-  instance = new Snake(snake.value)
+  instance = new Snake(snake.value, 1200, 600)
+  reRender()
 })
 </script>
 
@@ -25,3 +36,4 @@ canvas {
   border: 1px solid #222222;
 }
 </style>
+@/useVue/keyup
