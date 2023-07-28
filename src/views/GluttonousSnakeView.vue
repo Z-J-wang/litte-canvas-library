@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { Snake, keyCodeEnum } from '@/utils/Snake'
 import type { Direction } from '@/utils/Snake'
-import { useKeyup } from '@/useVue/keyup'
+import { useKeyup } from '@/usevue/keyup'
 
 const snake = ref()
 const { keyCode } = useKeyup()
