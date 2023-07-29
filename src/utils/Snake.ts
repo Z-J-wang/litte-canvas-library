@@ -16,70 +16,120 @@ enum DirectionEnum {
   down = 1
 }
 
+type SnakeBody = { x: number; y: number }[]
+
 export class Snake extends Canvas {
   private _width: number
   private _height: number
   private _x: number = 0
   private _y: number = 0
-  private _speed: number = 10
-  private _direction: Direction
+  private _direction: Direction = 'right'
   private _id!: number
 
-  constructor(element: HTMLCanvasElement, width: number, height: number) {
+  private _timer!: NodeJS.Timeout
+
+  private _body: SnakeBody = []
+
+  private _bodySize: number = 20
+
+  private _isDead: boolean = false
+
+  private _isGameOver: boolean = false
+
+  speed: number = 200 // 运动速度，默认200ms前进一格
+
+  constructor(element: HTMLCanvasElement, width: number, height: number, speed?: number) {
     super(element)
     if (!width || !height) throw '形参width和height必须大于0'
     this._width = width
     this._height = height
+    speed && (this.speed = speed)
+    this._initSnake()
+  }
+
+  private _initSnake() {
+    this._body = [
+      { x: 60, y: 20 },
+      { x: 40, y: 20 },
+      { x: 20, y: 20 }
+    ]
+  }
+
+  start() {
+    this.walk()
+    this.render()
   }
 
   render() {
     this._id = window.requestAnimationFrame(() => {
       this._drawSnake()
-      this._id = window.requestAnimationFrame(() => this._drawSnake())
+      this._id = window.requestAnimationFrame(() => this.render())
     })
   }
 
   // 绘制snake
   private _drawSnake() {
     const ctx = super.context
+    const { _body: body } = this
     ctx.clearRect(0, 0, this._width, this._height)
     ctx.save()
-    ctx.strokeStyle = 'red'
-    ctx.strokeRect(this._x, this._y, 10, 10)
+    body.forEach((item, i) => {
+      if (i === 0) {
+        ctx.fillStyle = 'red'
+      } else {
+        ctx.fillStyle = 'grey'
+      }
+      ctx.fillRect(item.x, item.y, this._bodySize, this._bodySize)
+    })
     ctx.stroke()
   }
 
-  walk(direction: Direction) {
+  control(direction: Direction) {
+    if (DirectionEnum[direction] === -DirectionEnum[this._direction]) return // 不允许反方向转弯
     this._direction = direction
+    this._timer && clearTimeout(this._timer)
+    this.walk()
+  }
+
+  walk() {
+    const direction = this._direction
+    const { x: headX, y: headY } = this._body[0]
     switch (direction) {
       case 'left':
       case 'right':
-        this._move(this._x + DirectionEnum[direction] * this._speed, this._y)
+        this._move(headX + DirectionEnum[direction] * this._bodySize, headY)
         break
       case 'up':
       case 'down':
-        this._move(this._x, this._y + DirectionEnum[direction] * this._speed)
+        this._move(headX, headY + DirectionEnum[direction] * this._bodySize)
         break
     }
+    this._timer = setTimeout(() => {
+      clearTimeout(this._timer)
+      this.walk()
+    }, this.speed)
   }
 
   private _move(x: number, y: number) {
+    let targetX: number,
+      targetY: number = 0
+
     if (x > this._width - 10) {
-      this._x = x - this._width
+      targetX = x - this._width
     } else if (x < 0) {
-      this._x = x + this._width
+      targetX = x + this._width
     } else {
-      this._x = x
+      targetX = x
     }
 
     if (y > this._height - 10) {
-      this._y = y - this._height
+      targetY = y - this._height
     } else if (y < 0) {
-      this._y = y + this._height
+      targetY = y + this._height
     } else {
-      this._y = y
+      targetY = y
     }
-
-    this._drawSnake()
+    this._body.unshift({ x: targetX, y: targetY })
+    this._body.pop()
   }
 }

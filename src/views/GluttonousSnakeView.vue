@@ -9,11 +9,13 @@ const { keyCode } = useKeyup()
 let instance: Snake
 
 const reRender = () => {
-  instance.render()
+  instance.start()
 }
 
 watch(keyCode, (value) => {
-  instance.walk(keyCodeEnum[value] as Direction)
+  if (keyCodeEnum[value]) {
+    instance.control(keyCodeEnum[value] as Direction)
+  }
 })
 
 onMounted(() => {
