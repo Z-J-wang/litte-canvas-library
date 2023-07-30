@@ -29,6 +29,7 @@ export class Snake extends Canvas {
   private _timer!: NodeJS.Timeout
 
   private _body: SnakeBody = []
+  private _foods: SnakeBody = []
 
   private _bodySize: number = 20
 
@@ -58,6 +59,7 @@ export class Snake extends Canvas {
   start() {
     this.walk()
     this.render()
+    this._initFood()
   }
 
   render() {
@@ -79,6 +81,10 @@ export class Snake extends Canvas {
       } else {
         ctx.fillStyle = 'grey'
       }
+      ctx.fillRect(item.x, item.y, this._bodySize, this._bodySize)
+    })
+    this._foods.forEach((item) => {
+      ctx.fillStyle = 'green'
       ctx.fillRect(item.x, item.y, this._bodySize, this._bodySize)
     })
     ctx.stroke()
@@ -131,5 +137,45 @@ export class Snake extends Canvas {
     }
     this._body.unshift({ x: targetX, y: targetY })
     this._body.pop()
+  }
+
+  private _initFood() {
+    const getRandomIntInclusive = (min: number, max: number) => {
+      min = Math.ceil(min / this._bodySize)
+      max = Math.floor(max / this._bodySize)
+      return (Math.floor(Math.random() * (max - min + 1)) + min) * this._bodySize //含最大值，含最小值
+    }
+
+    const createFood = (foods: SnakeBody) => {
+      let x = getRandomIntInclusive(0, this._width)
+      let y = getRandomIntInclusive(0, this._height)
+
+      const xList = ([[], ...foods] as [Array<any>, ...SnakeBody]).reduce((accumulator, food) => [
+        ...(accumulator as []),
+        ...Array(this._bodySize)
+          .fill(0)
+          .map((_item, i) => (food as { x: number; y: number }).x + i)
+      ])
+      const yList = ([[], ...foods] as [Array<any>, ...SnakeBody]).reduce((accumulator, food) => [
+        ...(accumulator as []),
+        ...Array(this._bodySize)
+          .fill(0)
+          .map((_item, i) => (food as { x: number; y: number }).y + i)
+      ])
+
+      if ((xList as number[]).includes(x) || (yList as number[]).includes(y)) {
+        const nexVal = createFood(foods)
+        x = nexVal.x
+        y = nexVal.y
+      }
+
+      return { x, y }
+    }
+
+    const foods: SnakeBody = []
+    for (let index = 0; index < 20; index++) {
+      foods.push(createFood(foods))
+    }
+    this._foods = foods
   }
 }
