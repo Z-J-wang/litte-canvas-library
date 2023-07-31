@@ -91,7 +91,12 @@ export class Snake extends Canvas {
   }
 
   control(direction: Direction) {
-    if (DirectionEnum[direction] === -DirectionEnum[this._direction]) return // 不允许反方向转弯
+    if (
+      (['left', 'right'].includes(direction) && ['left', 'right'].includes(this._direction)) ||
+      (['up', 'down'].includes(direction) && ['up', 'down'].includes(this._direction))
+    ) {
+      return // 不允许反方向转弯
+    }
     this._direction = direction
     this._timer && clearTimeout(this._timer)
     this.walk()
