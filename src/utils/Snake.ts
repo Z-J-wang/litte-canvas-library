@@ -122,6 +122,7 @@ export class Snake extends Canvas {
   }
 
   private _move(x: number, y: number) {
+    this._eat()
     let targetX: number,
       targetY: number = 0
 
@@ -142,6 +143,30 @@ export class Snake extends Canvas {
     }
     this._body.unshift({ x: targetX, y: targetY })
     this._body.pop()
+  }
+
+  private _eat() {
+    const body = this._body
+    const len = body.length
+    const head = this._body[0]
+    const foods = this._foods
+    for (let index = 0; index < foods.length; index++) {
+      const food = foods[index]
+      if (head.x === food.x && head.y === food.y) {
+        // head坐标与food重合，触发吃的动作
+        if (body[len - 1].x === body[len - 2].x) {
+          // 比较最后两节的身体判断新增身体的位置。通过观察可知，最后两节身体必定存在一个坐标轴一致的。
+          body.push({ x: body[len - 1].x, y: body[len - 1].y + this._bodySize })
+        } else if (body[len - 1].y === body[len - 2].y) {
+          body.push({ x: body[len - 1].x + this._bodySize, y: body[len - 1].y })
+        }
+        this._foods.splice(index, 1) // 删除被吃掉的food
+        break
+      }
+    }
+
+    // if (head.x === food.x && head.y === food.y) {
+    //   this._food = {
   }
 
   private _initFood() {
