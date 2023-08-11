@@ -16,7 +16,7 @@ enum DirectionEnum {
   down = 1
 }
 
-type SnakeBody = { x: number; y: number }[]
+type unit = { x: number; y: number }
 
 export class Snake extends Canvas {
   private _width: number
@@ -28,8 +28,8 @@ export class Snake extends Canvas {
 
   private _timer!: NodeJS.Timeout
 
-  private _body: SnakeBody = []
-  private _foods: SnakeBody = []
+  private _body: unit[] = []
+  private _foods: unit[] = []
 
   private _bodySize: number = 20
 
@@ -75,16 +75,16 @@ export class Snake extends Canvas {
     const { _body: body } = this
     ctx.clearRect(0, 0, this._width, this._height)
     ctx.save()
+    this._foods.forEach((item) => {
+      ctx.fillStyle = 'green'
+      ctx.fillRect(item.x, item.y, this._bodySize, this._bodySize)
+    })
     body.forEach((item, i) => {
       if (i === 0) {
         ctx.fillStyle = 'red'
       } else {
         ctx.fillStyle = 'grey'
       }
-      ctx.fillRect(item.x, item.y, this._bodySize, this._bodySize)
-    })
-    this._foods.forEach((item) => {
-      ctx.fillStyle = 'green'
       ctx.fillRect(item.x, item.y, this._bodySize, this._bodySize)
     })
     ctx.stroke()
@@ -164,9 +164,6 @@ export class Snake extends Canvas {
         break
       }
     }
-
-    // if (head.x === food.x && head.y === food.y) {
-    //   this._food = {
   }
 
   private _initFood() {
@@ -176,36 +173,20 @@ export class Snake extends Canvas {
       return (Math.floor(Math.random() * (max - min + 1)) + min) * this._bodySize //含最大值，含最小值
     }
 
-    const createFood = (foods: SnakeBody) => {
-      let x = getRandomIntInclusive(0, this._width)
-      let y = getRandomIntInclusive(0, this._height)
-
-      const xList = ([[], ...foods] as [Array<any>, ...SnakeBody]).reduce((accumulator, food) => [
-        ...(accumulator as []),
-        ...Array(this._bodySize)
-          .fill(0)
-          .map((_item, i) => (food as { x: number; y: number }).x + i)
-      ])
-      const yList = ([[], ...foods] as [Array<any>, ...SnakeBody]).reduce((accumulator, food) => [
-        ...(accumulator as []),
-        ...Array(this._bodySize)
-          .fill(0)
-          .map((_item, i) => (food as { x: number; y: number }).y + i)
-      ])
-
-      if ((xList as number[]).includes(x) || (yList as number[]).includes(y)) {
-        const nexVal = createFood(foods)
-        x = nexVal.x
-        y = nexVal.y
-      }
-
+    const createFood = () => {
+      const x = getRandomIntInclusive(0, this._width)
+      const y = getRandomIntInclusive(0, this._height)
       return { x, y }
     }
 
-    const foods: SnakeBody = []
-    for (let index = 0; index < 20; index++) {
-      foods.push(createFood(foods))
+    const foods: unit[] = []
+    while (foods.length < 200) {
+      const food = createFood()
+      if (![...foods, ...this._body].some((f) => f.x === food.x && f.y === food.y)) {
+        foods.push(food)
+      }
     }
+
     this._foods = foods
   }
 }
