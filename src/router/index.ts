@@ -17,15 +17,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     },
+    { path: '/canvas', name: 'Canvas', component: () => import('../views/CanvasView.vue') },
+    { path: '/gluttonous_snake', name: 'GluttonousSnake', component: () => import('../views/GluttonousSnakeView.vue') },
     {
-      path: '/canvas',
-      name: 'Canvas',
-      component: () => import('../views/CanvasView.vue')
-    },
-    {
-      path: '/gluttonous_snake',
-      name: 'GluttonousSnake',
-      component: () => import('../views/GluttonousSnakeView.vue')
+      path: '/picture_magnifying_glass',
+      name: 'PictureMagnifyingGlass',
+      component: () => import('../views/PictureMagnifyingGlassView.vue')
     }
   ]
 })

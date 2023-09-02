@@ -9,6 +9,7 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink to="/about">About</RouterLink>
       <RouterLink to="/canvas">Canvas</RouterLink>
       <RouterLink to="/gluttonous_snake">Gluttonous Snake</RouterLink>
+      <RouterLink to="/picture_magnifying_glass">Picture Magnifying Glass</RouterLink>
     </nav>
   </header>
 
