@@ -30,13 +30,6 @@ export default class Clock extends Canvas {
       this.renderWatchFace()
       this._id = window.requestAnimationFrame(() => this.draw())
     })
-    // const date = new Date()
-    // const h = date.getHours()
-    // const m = date.getMinutes()
-    // const s = date.getSeconds()
-
-    // const hh = h < 12? h : h - 12
-    // const mm = m < 10? '0' + m : m
   }
 
   renderWatchFace(): void {

@@ -18,6 +18,7 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     { path: '/canvas', name: 'Canvas', component: () => import('../views/CanvasView.vue') },
+    { path: '/clock', name: 'Clock', component: () => import('../views/ClockView.vue') },
     { path: '/gluttonous_snake', name: 'GluttonousSnake', component: () => import('../views/GluttonousSnakeView.vue') },
     {
       path: '/picture_magnifying_glass',

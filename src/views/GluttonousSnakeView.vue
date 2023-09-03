@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
   <div class="relative">
-    <canvas ref="snake" width="1200" height="600"></canvas>
+    <canvas class="m-auto" ref="snake" width="1200" height="600"></canvas>
     <el-button class="float-right cursor-pointer" @click="reRender">重新渲染</el-button>
   </div>
 </template>
