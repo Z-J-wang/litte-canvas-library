@@ -25,26 +25,42 @@ export class Snake extends Canvas {
   private _y: number = 0
   private _direction: Direction = 'right'
   private _id!: number
-
   private _timer!: NodeJS.Timeout
-
   private _body: unit[] = []
   private _foods: unit[] = []
-
   private _bodySize: number = 20
-
   private _isDead: boolean = false
-
-  private _isGameOver: boolean = false
-
+  private _subject: any
+  private _isNoBoundaryMode: boolean = false // 无边界模式
   speed: number = 200 // 运动速度，默认200ms前进一格
 
-  constructor(element: HTMLCanvasElement, width: number, height: number, speed?: number) {
+  public get isDead(): boolean {
+    return this._isDead
+  }
+
+  /**
+   * @param element canvas元素
+   * @param width canvas的宽度
+   * @param height canvas的高度
+   * @param subject rxjs的Subject实例，在死亡时将向该subject发送通知
+   * @param speed 行走速度
+   * @param isNoBoundaryMode 是否启用无边界模式，无边界模式下贪吃蛇会穿过边界从另外一边墙壁进来
+   */
+  constructor(
+    element: HTMLCanvasElement,
+    width: number,
+    height: number,
+    subject: any,
+    speed?: number,
+    isNoBoundaryMode?: boolean
+  ) {
     super(element)
     if (!width || !height) throw '形参width和height必须大于0'
+    this._subject = subject
     this._width = width
     this._height = height
     speed && (this.speed = speed)
+    isNoBoundaryMode && (this._isNoBoundaryMode = isNoBoundaryMode)
     this._initSnake()
   }
 
@@ -119,6 +135,7 @@ export class Snake extends Canvas {
       clearTimeout(this._timer)
       this.walk()
     }, this.speed)
+    this._gameOver()
   }
 
   private _move(x: number, y: number) {
@@ -188,5 +205,35 @@ export class Snake extends Canvas {
     }
 
     this._foods = foods
+  }
+
+  // TODO 后面可以在地图中增加随机生成的障碍物
+  private _death() {
+    const head = this._body[0]
+    const stumblingBlock = [...this._body.slice(1)] // 障碍物集合，head触碰到障碍物就会死亡
+
+    if (!this._isNoBoundaryMode) {
+      // 非无边界模式，触碰边界就会死亡
+      if (
+        head.x === 0 ||
+        head.x === this._width - this._bodySize ||
+        head.y === 0 ||
+        head.y === this._height - this._bodySize
+      ) {
+        return true
+      }
+    }
+
+    return stumblingBlock.some((body) => body.x === head.x && body.y === head.y)
+  }
+
+  private _gameOver() {
+    this._isDead = this._death()
+    if (this._isDead) {
+      clearTimeout(this._timer)
+      setTimeout(() => {
+        this._subject.next(true) // 每次死亡都对外通知一次
+      }, this.speed)
+    }
   }
 }

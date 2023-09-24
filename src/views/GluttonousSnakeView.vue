@@ -3,6 +3,14 @@ import { ref, onMounted, watch } from 'vue'
 import { Snake, keyCodeEnum } from '@/utils/Snake'
 import type { Direction } from '@/utils/Snake'
 import { useKeyup } from '@/useVue/keyup'
+import { Subject } from 'rxjs'
+
+const subject = new Subject()
+subject.subscribe({
+  next: (value) => {
+    if (value) alert('Game Over')
+  }
+})
 
 const snake = ref()
 const { keyCode } = useKeyup()
@@ -19,7 +27,7 @@ watch(keyCode, (value) => {
 })
 
 onMounted(() => {
-  instance = new Snake(snake.value, 1200, 600)
+  instance = new Snake(snake.value, 1200, 600, subject, 200, true)
   reRender()
 })
 </script>
@@ -38,4 +46,3 @@ canvas {
   border: 1px solid #222222;
 }
 </style>
-@/useVue/keyup
