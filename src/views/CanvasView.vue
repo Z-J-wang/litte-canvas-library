@@ -5,7 +5,6 @@ import { Ball, SportTypeEnum } from '@/utils/Ball'
 
 const canvas = ref()
 const canvasBall = ref()
-const canvasClock = ref()
 let canvasInstance: Canvas
 let ballInstance: Ball
 
