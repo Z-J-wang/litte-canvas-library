@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+const router = useRouter()
+console.log(localStorage.getItem('routes'))
+console.log()
+const routes = router.getRoutes()
+const menu = routes.map((route) => {
+  return {
+    to: route.name,
+    label: route.name.replace('View', '')
+  }
+})
+console.log(menu)
 </script>
 
 <template>
   <header>
     <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-      <RouterLink to="/canvas">Canvas</RouterLink>
-      <RouterLink to="/clock">Clock</RouterLink>
-      <RouterLink to="/gluttonous_snake">Gluttonous Snake</RouterLink>
-      <RouterLink to="/picture_magnifying_glass">Picture Magnifying Glass</RouterLink>
+      <RouterLink v-for="{ to, label } in menu" :key="to" :to="{ name: to }">{{ label }}</RouterLink>
     </nav>
   </header>
 
