@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import Canvas from '@/utils/Canvas'
 import { useMouse } from '@/useVue/useMouse'
 
