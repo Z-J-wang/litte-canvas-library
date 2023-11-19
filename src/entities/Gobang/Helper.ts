@@ -15,8 +15,14 @@ export default class Helper extends CanvasBase {
     this.chessPiecesSize = size
   }
 
-  draw() {
-    this.coordinate(3, 3)
+  drawCoordinate(elementX: number, elementY: number, isOutside: Boolean) {
+    if (isOutside) {
+      return super.clear()
+    }
+    const x = Math.floor(elementX / this._step)
+    const y = Math.floor(elementY / this._step)
+    super.clear()
+    this.coordinate(x, y)
   }
 
   coordinate(x: number, y: number) {

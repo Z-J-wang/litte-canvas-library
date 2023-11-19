@@ -7,7 +7,14 @@ export default class Gobang extends CanvasBase {
   private _height: number
   private _id!: number
   private _step!: number
-  private helper!: Helper
+  private _helper!: Helper
+  public get helper(): Helper {
+    return this._helper
+  }
+  public set helper(value: Helper) {
+    this._helper = value
+  }
+
   private chessPieces = {
     size: 30
   }
@@ -26,9 +33,5 @@ export default class Gobang extends CanvasBase {
     this._step = (this._width - 20) / 15
     new Chessboard(chessboardElement, width, height, this._step)
     this.helper = new Helper(helperElement, width, height, this._step, this.chessPieces.size)
-  }
-
-  draw() {
-    this.helper.draw()
   }
 }
