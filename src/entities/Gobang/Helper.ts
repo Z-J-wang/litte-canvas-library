@@ -16,13 +16,11 @@ export default class Helper extends CanvasBase {
   }
 
   drawCoordinate(elementX: number, elementY: number, isOutside: Boolean) {
-    if (isOutside) {
-      return super.clear()
-    }
-    const x = Math.floor(elementX / this._step)
-    const y = Math.floor(elementY / this._step)
+    if (isOutside) return super.clear()
+    const x = Math.floor((elementX - 10) / this._step)
+    const y = Math.floor((elementY - 10) / this._step)
     super.clear()
-    this.coordinate(x, y)
+    if (x >= 0 && x <= 14 && y >= 0 && y <= 14) this.coordinate(x, y)
   }
 
   coordinate(x: number, y: number) {
