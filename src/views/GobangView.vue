@@ -2,13 +2,23 @@
 import { ref, onMounted, watch } from 'vue'
 import Gobang from '@/entities/Gobang/Gobang'
 import { useMouseInElement } from '@vueuse/core'
+import { Subject } from 'rxjs'
 
 const container = ref()
 const canvasGobang = ref()
 const canvasBoard = ref()
 const canvasHelper = ref()
-const poll = ref('black')
+const player = ref('black')
 
+const subject = new Subject()
+subject.subscribe({
+  next: (value: any) => {
+    alert(value.message)
+    setTimeout(() => {
+      instance.reset()
+    }, 500)
+  }
+})
 let instance: Gobang
 const { elementX, elementY, isOutside } = useMouseInElement(container)
 
@@ -18,12 +28,11 @@ watch([elementX, elementY, isOutside], () => {
 
 function drop() {
   instance.drop(elementX.value, elementY.value, isOutside.value)
-  poll.value = instance.poll
-  console.log(instance.poll)
+  player.value = instance.player
 }
 
 onMounted(() => {
-  instance = new Gobang(canvasGobang.value, canvasBoard.value, canvasHelper.value, 620, 620)
+  instance = new Gobang(canvasGobang.value, canvasBoard.value, canvasHelper.value, 620, 620, subject)
 })
 </script>
 
