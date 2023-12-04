@@ -65,7 +65,7 @@ export default class Gobang extends CanvasBase {
     if (isOutside) return
     const x = Math.floor((elementX - 10) / this._step)
     const y = Math.floor((elementY - 10) / this._step)
-    const loc = `${x}${y}`
+    const loc = `${x}-${y}`
     const isUsed = [...this._blackChessPieceSet, ...this._whiteChessPieceSet].some((item) => item === loc)
     if (x >= 0 && x <= 14 && y >= 0 && y <= 14 && !isUsed) {
       if (this._player === 'blacker') this._blackChessPieceSet.push(loc)
@@ -111,7 +111,7 @@ export default class Gobang extends CanvasBase {
     const whiteRecordRightTop = new Map() // 记录从右上角方向个各列的白棋
 
     // 遍历棋盘，按左、上、左上、右上四个方向汇总棋子
-    !(() => {
+    const traverse = () => {
       const blackData = this._blackChessPieceSet
       const whiteData = this._whiteChessPieceSet
 
@@ -158,18 +158,22 @@ export default class Gobang extends CanvasBase {
         }
       }
 
-      for (let x = 0; x < 15; x++) {
-        for (let y = 0; y < 15; y++) {
-          const loc = `${x}${y}`
-          if (blackData.includes(loc)) {
-            helper(blackRecordLeft, blackRecordTop, blackRecordLeftTop, blackRecordRightTop, x, y)
-          }
-          if (whiteData.includes(loc)) {
-            helper(whiteRecordLeft, whiteRecordTop, whiteRecordLeftTop, whiteRecordRightTop, x, y)
-          }
-        }
-      }
-    })()
+      blackData.forEach((item) => {
+        const temp = item.split('-')
+        const x = parseInt(temp[0])
+        const y = parseInt(temp[1])
+        console.log(x, y)
+
+        helper(blackRecordLeft, blackRecordTop, blackRecordLeftTop, blackRecordRightTop, x, y)
+      })
+      whiteData.forEach((item) => {
+        const temp = item.split('-')
+        const x = parseInt(temp[0])
+        const y = parseInt(temp[1])
+        helper(whiteRecordLeft, whiteRecordTop, whiteRecordLeftTop, whiteRecordRightTop, x, y)
+      })
+    }
+    traverse()
 
     // 判断是否五子连线
     const judge = (map: any[] | Map<any, any>, direction: string) => {
