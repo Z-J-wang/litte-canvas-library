@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 const router = useRouter()
-console.log(localStorage.getItem('routes'))
-console.log()
 const routes = router.getRoutes()
-const menu = routes.map((route) => {
-  return {
-    to: route.name,
-    label: route.name.replace('View', '')
-  }
+const menu = routes.map((route: any) => {
+  return { to: route.name, label: route.name.replace('View', '') }
 })
-console.log(menu)
 </script>
 
 <template>
